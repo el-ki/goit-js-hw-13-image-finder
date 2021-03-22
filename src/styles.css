@@ -6,6 +6,7 @@ html {
 *::before,
 *::after {
   box-sizing: inherit;
+  padding-inline-start: 0;
 }
 
 body {
@@ -23,13 +24,17 @@ input {
   padding: 10px;
   border-radius: 3px;
 }
-
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+}
 .photo-card {
   width: 350px;
   height: 300px;
-  margin: 5px;
+  margin: 0 auto;
   border: 1px solid #ccc;
   float: left;
+  margin-bottom: 15px;
 }
 
 .image {

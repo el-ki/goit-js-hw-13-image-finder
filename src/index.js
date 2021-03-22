@@ -2,6 +2,7 @@ import './styles.css';
 import fetchImages from './js/apiService';
 import cardsTemplate from './templates/cards.hbs';
 import debounce from 'lodash.debounce';
+import * as basicLightbox from 'basiclightbox'
 
 const refs = {
     imageGallery: document.querySelector('.gallery'),
@@ -48,7 +49,8 @@ function handleInput(event) {
         perPage += 12;
         fetchImages(query, page, perPage).then(image => {
             renderImageList(image.hits);
-            coordinateY += coordinateY;     
+            coordinateY += coordinateY;
+            console.log(coordinateY);
             window.scrollTo({
                 top: coordinateY,
             behavior: "smooth"
