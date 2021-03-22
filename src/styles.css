@@ -17,6 +17,12 @@ body {
    * CSS image reference example.
    */
 }
+input {
+  margin: 0 auto;
+  display: block;
+  padding: 10px;
+  border-radius: 3px;
+}
 
 .photo-card {
   width: 350px;
@@ -38,7 +44,22 @@ body {
   padding: 10px;
   justify-content: space-between;
 }
+.btn-wrapper {
+  text-align: center;
+}
 
 .btn {
-  display: flex;
+  padding-bottom: 30px;
+  padding-top: 30px;
+  background: #042a63;
+  border-radius: 3px;
+  color: white;
+  display: inline-block;
+  padding: 10px 30px;
+  transition: all 0.25s ease-out;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:hover {
+  background-color: #021737;
 }

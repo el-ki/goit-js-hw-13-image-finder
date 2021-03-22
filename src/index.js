@@ -5,7 +5,8 @@ import debounce from 'lodash.debounce';
 
 const refs = {
     imageGallery: document.querySelector('.gallery'),
-    input: document.querySelector('input[name="query"]')
+    input: document.querySelector('input[name="query"]'),
+    button: document.querySelector('.btn')
 }
 
 function renderImageList(imageArray) { 
@@ -18,10 +19,13 @@ function clearAll() {
 }
 
 let page = 0;
+let perPage = 12;
 let array = [];
+let coordinateY = window.innerHeight;
 
 function handleInput(event) {
     clearAll()
+    perPage = 12;
         const query = event.target.value;
 
     array.push(query);
@@ -34,16 +38,24 @@ function handleInput(event) {
         return;
     }
 
-    fetchImages(query, page)
+    fetchImages(query, page, perPage)
         .then(image => {
-
             renderImageList(image.hits)
         })
-    .catch(err => `Something went wrong, try again`);
+        .catch(err => `Something went wrong, try again`);
+    
+    refs.button.addEventListener('click', debounce(() => {
+        perPage += 12;
+        fetchImages(query, page, perPage).then(image => {
+            renderImageList(image.hits);
+            coordinateY += coordinateY;     
+            window.scrollTo({
+                top: coordinateY,
+            behavior: "smooth"
+        });
+        })
+        }), 1000)
 }
     
 refs.input.addEventListener('input', debounce(handleInput, 1000))
-
-
-
 
