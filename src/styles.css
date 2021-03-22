@@ -17,3 +17,28 @@ body {
    * CSS image reference example.
    */
 }
+
+.photo-card {
+  width: 350px;
+  height: 300px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  float: left;
+}
+
+.image {
+  max-width: 100%;
+  max-height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.stats {
+  display: flex;
+  padding: 10px;
+  justify-content: space-between;
+}
+
+.btn {
+  display: flex;
+}
