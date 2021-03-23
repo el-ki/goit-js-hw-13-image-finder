@@ -1,63 +1,79 @@
 import './styles.css';
-import fetchImages from './js/apiService';
+import ImgApiService from './js/apiService';
 import cardsTemplate from './templates/cards.hbs';
-import debounce from 'lodash.debounce';
-import * as basicLightbox from 'basiclightbox'
+import { alert } from '@pnotify/core';
+import '@pnotify/core/dist/PNotify.css';
+import '@pnotify/core/dist/BrightTheme.css';
+
+
+
+const imgApiService = new ImgApiService();
+// console.log(imgApiService);
 
 const refs = {
     imageGallery: document.querySelector('.gallery'),
-    input: document.querySelector('input[name="query"]'),
-    button: document.querySelector('.btn')
+    searchForm: document.querySelector('.search-form'),
+    loadMoreButton: document.querySelector('.load-more'),
 }
 
-function renderImageList(imageArray) { 
-    const markup = cardsTemplate(imageArray);
-    refs.imageGallery.innerHTML = markup;
-}
+refs.searchForm.addEventListener('submit', onSearch, 1000);
+refs.loadMoreButton.addEventListener('click', onLoadMore, 1000);
 
-function clearAll() {
-    refs.imageGallery.innerHTML = '';
-}
 
-let page = 0;
-let perPage = 12;
-let array = [];
-let coordinateY = window.innerHeight;
+function onSearch(event) {
+    event.preventDefault();
+    clearArticleContainer()
+    imgApiService.query = event.currentTarget.elements.query.value.trim();
 
-function handleInput(event) {
-    clearAll()
-    perPage = 12;
-        const query = event.target.value;
+    if (imgApiService.query === '') {
 
-    array.push(query);
-    if (array[0] === query) {
-        page += 1
-    } if (array[0] !== query) {
-        array = [];
-        page = 1;
-    } if (!query.trim()) {
-        return;
+        refs.loadMoreButton.classList.add('is-inactive');
+        return alert({
+            text: 'Please, insert a query!',
+            delay: 1000,
+        });
     }
-
-    fetchImages(query, page, perPage)
-        .then(image => {
-            renderImageList(image.hits)
+    imgApiService.resetPage();
+    imgApiService.fetchImages()
+        .then(images => {
+             if (images.length === 0) {
+                return alert({
+                text: 'No images for this query, try again!',
+                delay: 1000,
+        });
+            }
+            renderImageList(images)
         })
         .catch(err => `Something went wrong, try again`);
-    
-    refs.button.addEventListener('click', debounce(() => {
-        perPage += 12;
-        fetchImages(query, page, perPage).then(image => {
-            renderImageList(image.hits);
-            coordinateY += coordinateY;
-            console.log(coordinateY);
-            window.scrollTo({
-                top: coordinateY,
-            behavior: "smooth"
-        });
-        })
-        }), 1000)
 }
-    
-refs.input.addEventListener('input', debounce(handleInput, 1000))
 
+function onLoadMore() {
+    imgApiService.fetchImages()
+        .then(images => {
+            if (images.length === 0) {
+                return alert({
+                    text: 'No more images!',
+                    delay: 1000,
+                })
+            }
+            renderImageList(images);
+            let scroll = refs.imageGallery.scrollHeight - 890;
+            // console.log(scroll);
+            window.scrollTo({
+            top: scroll,
+            behavior: "smooth"
+            });
+            
+        })
+        .catch(err => `Something went wrong, try again`);;
+}
+
+function renderImageList(images) {
+    refs.imageGallery.insertAdjacentHTML('beforeend', cardsTemplate(images));
+    refs.loadMoreButton.classList.remove('is-inactive');
+    refs.loadMoreButton.classList.add('is-active');
+}
+       
+function clearArticleContainer() {
+    refs.imageGallery.innerHTML = '';
+}

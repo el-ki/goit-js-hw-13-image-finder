@@ -8,14 +8,18 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 </head>
 <body>
+  <div class = "search-wrapper">
   <form class="search-form" id="search-form">
     <input type="text" name="query" autocomplete="off" placeholder="Search images..." />
+    <button class="btn" type="submit">Search</button>
   </form>
+
+</div>
   <ul class="gallery">
-    <!-- Список <li> с карточками изображений -->
+    <!-- <li> list with images -->
   </ul>
   <div class="btn-wrapper">
-    <button class="btn" type="button">Load more</button>
+    <button class="btn load-more is-inactive" type="button">Load more</button>
   </div>
 </body>
 </html>
